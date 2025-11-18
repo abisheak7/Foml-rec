@@ -1,0 +1,86 @@
+Ex. No.: 9 b.
+Date:
+A PYTHON PROGRAM TO IMPLEMENT K-MEANS MODEL
+Aim:
+To implement a python program using a K-Means Algorithm in a model.
+Algorithm:
+1. Import Necessary Libraries:
+Import required libraries like numpy, matplotlib.pyplot, and sklearn.cluster.
+2. Load and Preprocess Data:
+Load the dataset.
+Preprocess the data if needed (e.g., scaling).
+3. Initialize Cluster Centers:
+Choose the number of clusters (K).
+Initialize K cluster centers randomly.
+4. Assign Data Points to Clusters:
+For each data point, calculate the distance to each cluster center.
+Assign the data point to the cluster with the nearest center.
+5. Update Cluster Centers:
+Calculate the mean of the data points in each cluster.
+Update the cluster centers to the calculated means.
+6. Repeat Steps 4 and 5:
+Repeat the assignment of data points to clusters and updating of cluster centers until
+convergence (i.e., when the cluster assignments do not change much between iterations).
+7. Plot the Clusters:
+Plot the data points and the cluster centers to visualize the clustering result.PROGRAM:
+data = pd.read_csv('../input/k-means-clustering/KNN (3).csv')
+data.head(5)
+req_data = data.iloc[:,1:]
+req_data.head(5)
+shuffle_index = np.random.permutation(req_data.shape[0])
+#shuffling the row index of our dataset
+req_data = req_data.iloc[shuffle_index] req_data.head(5)train_size = int(req_data.shape[0]*0.7)
+train_df = req_data.iloc[:train_size,:]
+test_df = req_data.iloc[train_size:,:]
+train = train_df.values
+test = test_df.values
+y_true = test[:,-1]
+print('Train_Shape: ',train_df.shape)
+print('Test_Shape: ',test_df.shape)
+from math import sqrt
+def euclidean_distance(x_test, x_train):
+distance = 0
+for i in range(len(x_test)-1):
+distance += (x_test[i]-x_train[i])**2
+return sqrt(distance)
+def get_neighbors(x_test, x_train, num_neighbors):
+distances = []data = []
+for i in x_train:
+distances.append(euclidean_distance(x_test,i))
+data.append(i)
+distances = np.array(distances)
+data = np.array(data)
+sort_indexes = distances.argsort() #argsort() function returns indices by sorting
+distances data in ascending order
+data = data[sort_indexes] #modifying our data based on sorted indices, so that we
+can get the nearest neighbors
+return data[:num_neighbors]
+def prediction(x_test, x_train, num_neighbors):
+classes = []
+neighbors = get_neighbors(x_test, x_train, num_neighbors)
+for i in neighbors:
+classes.append(i[-1])
+predicted = max(classes, key=classes.count) #taking the most repeated class
+return predicted
+def predict_classifier(x_test):
+classes = []
+neighbors = get_neighbors(x_test, req_data.values, 5)
+for i in neighbors:
+classes.append(i[-1])
+predicted = max(classes, key=classes.count)
+print(predicted)
+return predicted
+def accuracy(y_true, y_pred):
+num_correct = 0
+for i in range(len(y_true))if y_true[i]==y_pred[i]:
+num_correct+=1
+accuracy = num_correct/len(y_true)
+return accuracy
+y_pred = []
+for i in test:
+y_pred.append(prediction(i, train, 5))
+y_pred
+accuracy = accuracy(y_true, y_pred)
+accuracyRESULT:-
+Thus the python program to implement the K-Means model has been successfully
+implemented and the results have been verified and analyzed
