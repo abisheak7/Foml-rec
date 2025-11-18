@@ -1,0 +1,157 @@
+Ex no: 3
+Date:
+A PYTHON PROGRAM TO IMPLEMENT LOGISTIC MODEL
+Aim:
+To implement python program for the logistic model using suv car dataset.
+Algorithm:
+Step 1: Import Necessary Libraries:
+● pandas for data manipulation
+● sklearn.model_selection for train-test split
+● sklearn.preprocessing for data preprocessing
+● sklearn.linear_model for logistic regression
+● matplotlib.pyplot for
+plotting Step 2: Read the Dataset:
+● Use pandas to read the suv_cars.csv dataset into a DataFrame.
+Step 3: Preprocess the Data:
+● Select the relevant columns for the analysis (e.g., 'Age', 'EstimatedSalary',
+'Purchased').
+● Encode categorical variables if necessary (e.g., using LabelEncoder
+or OneHotEncoder).
+● Split the data into features (X) and target variable (y).
+Step 4: Split the Data:
+● Split the dataset into training and testing sets using
+train_test_split. Step 5: Feature Scaling:
+● Standardize the features using StandardScaler to ensure they have the same
+scale. Step 6: Create and Train the Model:● Create a logistic regression model using LogisticRegression from
+sklearn.linear_model.
+● Train the model on the training data using the fit method.
+o Create a function named “Sigmoid ()” which will define the sigmoid values
+using the
+o formula (1/1+e-z) and return the computed value.
+o Create a function named “initialize()” which will initialize the values with
+zeroes and assign the value to “weights” variable, initializes with ones and
+assigns the value to variable “x” and returns both “x” and “weights”.
+o Create a function named “fit” which will be used to plot the graph according
+to the training data.
+o Create a predict function that will predict values according to the training
+model created using the fit function.
+o Invoke the standardize() function for “x-train” and
+“x-test” Step 7: Make Predictions:
+● Use the trained model to make predictions on the test data using the predict
+method.
+o Use the “predict()” function to predict the values of the testing data and
+assign the value to “y_pred” variable.
+o Use the “predict()” function to predict the values of the training data and
+assign the value to “y_trainn” variable.
+o Compute f1_score for both the training and testing data and assign the values
+to “f1_score_tr” and “f1_score_te” respectively
+Step 8: Evaluate the Model:
+● Calculate the accuracy of the model on the test data using the score
+method. (Accuracy = (tp+tn)/(tp+tn+fp+fn)).
+● Generate a confusion matrix and classification report to further evaluate the
+model's performance.
+Step 9: Visualize the Results:● Plot the decision boundary of the logistic regression model (optional).
+PROGRAM :
+import pandas as pd
+import numpy as np
+from numpy import log,dot,exp,shape
+from sklearn.metrics import confusion_matrix
+data = pd.read_csv('../input/suvcars/suv_data.csv')
+print(data.head())
+x = data.iloc[:, [2, 3]].values
+y = data.iloc[:, 4].values
+In-built Function
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test=train_test_split(x,y,test_size=0.10,
+random_state=0) from sklearn.preprocessing import StandardScaler
+sc=StandardScaler()
+x_train=sc.fit_transform(x_train)
+x_test=sc.transform(x_test)
+print (x_train[0:10,:])
+from sklearn.linear_model import LogisticRegression
+classifier=LogisticRegression(random_state=0)
+classifier.fit(x_train,y_train)
+LogisticRegression (random_state=0)
+y_pred = classifier.predict(x_test)
+print(y_pred)
+[000000010100000000010010100000000001001]
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+print ("Confusion Matrix : \n", cm)
+from sklearn.metrics import accuracy_score
+print ("Accuracy : ", accuracy_score(y_test, y_pred))
+User Defined function
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test=train_test_split(x,y,test_size=0.10, random_state=0)
+def Std(input_data):
+mean0 = np.mean(input_data[:, 0])
+sd0 = np.std(input_data[:, 0])
+mean1 = np.mean(input_data[:, 1])
+sd1 = np.std(input_data[:, 1])
+return lambda x:((x[0]-mean0)/sd0, (x[1]-mean1)/sd1)
+my_std = Std(x)
+my_std(x_train[0])def standardize(X_tr):
+for i in range(shape(X_tr)[1]):
+X_tr[:,i] = (X_tr[:,i] - np.mean(X_tr[:,i]))/np.std(X_tr[:,i])
+def F1_score(y,y_hat):
+tp,tn,fp,fn = 0,0,0,0
+for i in range(len(y)):
+if y[i] == 1 and y_hat[i] == 1:
+tp += 1
+elif y[i] == 1 and y_hat[i] == 0:
+fn += 1
+elif y[i] == 0 and y_hat[i] == 1:
+fp += 1
+elif y[i] == 0 and y_hat[i] == 0:
+tn += 1
+precision = tp/(tp+fp)
+recall = tp/(tp+fn)
+f1_score = 2*precision*recall/(precision+recall)
+return f1_score
+class LogisticRegression:
+def sigmoid(self,z):
+sig = 1/(1+exp(-z))
+return sig
+def initialize(self,X):
+weights = np.zeros((shape(X)[1]+1,1))
+X = np.c_[np.ones((shape(X)[0],1)),X]
+return weights,X
+def fit(self,X,y,alpha=0.001,iter=400):
+weights,X = self.initialize(X)def cost(theta):
+z = dot(X,theta)
+cost0 = y.T.dot(log(self.sigmoid(z)))
+cost1 = (1-y).T.dot(log(1-self.sigmoid(z)))
+cost = -((cost1 + cost0))/len(y)
+return cost
+cost_list = np.zeros(iter,)
+for i in range(iter):
+weights = weights - alpha*dot(X.T,self.sigmoid(dot(X,weights))-np.reshape(y,(len(y),1)))
+cost_list[i] = cost(weights)
+self.weights = weights
+return cost_list
+def predict(self,X):
+z =
+dot(self.initialize(X)[1],self.weights) lis
+= []
+for i in self.sigmoid(z):
+if i>0.5:
+lis.append(1)
+else:
+lis.append(0)
+return lis
+standardize(x_train)
+standardize(x_test)
+obj1 = LogisticRegression()
+model= obj1.fit(x_train,y_train)
+y_pred = obj1.predict(x_test)
+y_trainn = obj1.predict(x_train)
+f1_score_tr = F1_score(y_train,y_trainn)
+f1_score_te = F1_score(y_test,y_pred)
+print(f1_score_tr)print(f1_score_te)
+conf_mat = confusion_matrix(y_test, y_pred)
+accuracy = (conf_mat[0, 0] + conf_mat[1, 1]) / sum(sum(conf_mat))
+print("Accuracy is : ",accuracy)
+RESULT:-
+Thus, the python program to implement logistic regression for the given suv_cars
+dataset is analyzed and the logistic regression model is classifies successfully. The
+performance of the developed model is measured using F1-score and Accuracy
